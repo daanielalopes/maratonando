@@ -1,12 +1,13 @@
 # maratonando ✦
 
-Descubra o que assistir a seguir — filmes **e** séries. Você escolhe o tipo, informa um título que curtiu e recebe recomendações parecidas. Dá pra navegar por um catálogo de séries por gênero e por filmes puxados em tempo real do [TMDB](https://www.themoviedb.org/), com pôster, sinopse e trailer.
+Descubra o que assistir a seguir — filmes **e** séries. Você escolhe o tipo, informa um título que curtiu e recebe recomendações parecidas. Todo o catálogo — séries e filmes, pôsteres, sinopses e trailers — é puxado em tempo real do [TMDB](https://www.themoviedb.org/).
 
 ## ✦ Funcionalidades
 
 - 🎬📺 **Seletor Filme / Série** na busca de recomendações
 - 🤖 **Recomendações** via API do TMDB (`/search` + `/recommendations`)
-- 🗂️ **Catálogo com abas**: Séries (por gênero) e Filmes (em alta / por gênero, via TMDB)
+- 🗂️ **Catálogo com abas**: Séries e Filmes (em alta / por gênero), tudo via TMDB
+- 🎲 **Decide por mim** — sorteia um filme ou série aleatório do TMDB
 - 🔎 **Modal** com sinopse e trailer ao clicar em qualquer título
 - 🌙 Visual escuro com pegada de app de streaming
 
@@ -18,16 +19,14 @@ Descubra o que assistir a seguir — filmes **e** séries. Você escolhe o tipo,
 ├── sitefinal.css         # visual estilo streaming
 ├── js/
 │   ├── config.js         # chave da API do TMDB
-│   ├── series-data.js    # catálogo local de séries (por gênero)
 │   ├── recomendacoes.js  # recomendações no TMDB (filme ou série)
-│   └── app.js            # prateleiras, abas e modal
-├── img/                  # pôsteres locais das séries
+│   └── app.js            # prateleiras, abas e modal (dados do TMDB)
 └── logo.png
 ```
 
 ## ▶️ Como rodar
 
-As recomendações e as prateleiras de filmes precisam de internet (falam com o TMDB). Sirva com um servidor local:
+O catálogo, as recomendações e as imagens vêm todos do TMDB, então é preciso internet. Sirva com um servidor local:
 
 ```bash
 python3 -m http.server 8000
