@@ -64,7 +64,7 @@
       genero: "filme",
       img: m.poster_path ? IMG + m.poster_path : "",
       sinopse: m.overview || "Sinopse não disponível em português.",
-      trailer: "https://www.youtube.com/results?search_query=" + encodeURIComponent(titulo + " trailer")
+      tmdbId: m.id, tmdbTipo: "movie"
     }));
     return el;
   }
@@ -137,25 +137,74 @@
   const modal = document.getElementById("modal");
   const modalBody = document.getElementById("modal-body");
 
-  function ytEmbed(url) {
-    const m = String(url || "").match(/(?:youtu\.be\/|v=)([\w-]{11})/);
-    return m ? "https://www.youtube.com/embed/" + m[1] : null;
+  function ytId(url) {
+    const m = String(url || "").match(/(?:youtu\.be\/|v=|embed\/)([\w-]{11})/);
+    return m ? m[1] : null;
   }
-  function openModal(item) {
-    const embed = ytEmbed(item.trailer);
-    const media = embed
-      ? `<div class="modal-video"><iframe src="${embed}" title="trailer" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>`
-      : `<div class="modal-poster"><img src="${escapeAttr(item.img)}" alt="${escapeAttr(item.titulo)}" onerror="this.parentNode.remove()" /></div>`;
+
+  // busca o id do trailer (YouTube) real no TMDB, quando temos o id do título
+  async function trailerIdTMDB(tipo, id) {
+    if (!cfg.API_KEY || !tipo || !id) return null;
+    // tenta no idioma configurado; se não achar, tenta em inglês
+    for (const lang of [cfg.LANG || "pt-BR", "en-US"]) {
+      try {
+        const url = new URL(API + "/" + tipo + "/" + id + "/videos");
+        url.searchParams.set("api_key", cfg.API_KEY);
+        url.searchParams.set("language", lang);
+        const res = await fetch(url.toString());
+        if (!res.ok) continue;
+        const data = await res.json();
+        const vids = (data.results || []).filter((v) => v.site === "YouTube");
+        const trailer =
+          vids.find((v) => v.type === "Trailer" && v.official) ||
+          vids.find((v) => v.type === "Trailer") ||
+          vids.find((v) => v.type === "Teaser") ||
+          vids[0];
+        if (trailer) return trailer.key;
+      } catch (e) { /* tenta próximo idioma */ }
+    }
+    return null;
+  }
+
+  function buscaYoutube(titulo) {
+    return "https://www.youtube.com/results?search_query=" + encodeURIComponent(titulo + " trailer");
+  }
+
+  function renderModal(item, embedId) {
+    const media = embedId
+      ? `<div class="modal-video"><iframe src="https://www.youtube.com/embed/${embedId}" title="trailer" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>`
+      : `<div class="modal-poster"><img src="${escapeAttr(item.img)}" alt="${escapeAttr(item.titulo)}" onerror="this.parentNode.style.display='none'" /></div>`;
+    // link: se temos o trailer, aponta direto; senão, busca no YouTube
+    const link = embedId ? ("https://www.youtube.com/watch?v=" + embedId) : buscaYoutube(item.titulo);
     modalBody.innerHTML = `
       ${media}
       <div class="modal-text">
         <span class="modal-tag">${escapeHtml(item.genero)}</span>
         <h2>${escapeHtml(item.titulo)}</h2>
         <p>${escapeHtml(item.sinopse || "")}</p>
-        ${item.trailer ? `<a class="modal-trailer" href="${escapeAttr(item.trailer)}" target="_blank" rel="noopener">▸ ver trailer no YouTube</a>` : ""}
+        <a class="modal-trailer" href="${escapeAttr(link)}" target="_blank" rel="noopener">▸ ${embedId ? "ver trailer no YouTube" : "procurar trailer no YouTube"}</a>
       </div>`;
+  }
+
+  async function openModal(item) {
     modal.classList.remove("hidden");
     document.body.style.overflow = "hidden";
+
+    // 1) se o item já traz um link de trailer do YouTube "de verdade", usa
+    let embedId = ytId(item.trailer);
+
+    // 2) mostra imediatamente (com o que temos) para não travar
+    renderModal(item, embedId);
+
+    // 3) se ainda não temos vídeo mas temos o id do TMDB, busca o trailer real
+    if (!embedId && item.tmdbId && item.tmdbTipo) {
+      renderModal(item, null); // garante o pôster enquanto busca
+      const key = await trailerIdTMDB(item.tmdbTipo, item.tmdbId);
+      // só atualiza se o modal ainda estiver aberto no mesmo item
+      if (key && !modal.classList.contains("hidden")) {
+        renderModal(item, key);
+      }
+    }
   }
   function closeModal() {
     modal.classList.add("hidden");
@@ -168,6 +217,62 @@
 
   // expõe para o recomendador reutilizar
   window.CINE = { openModal, closeModal, escapeHtml, escapeAttr };
+
+  /* ============================================================
+     SURPREENDA-ME — sorteia um filme ou série e abre no modal
+     ============================================================ */
+  const surpriseBtn = document.getElementById("surprise-btn");
+  const statusEl = document.getElementById("rec-status");
+
+  function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+
+  function surpresaLocal() {
+    if (!catalogo.length) return false;
+    openModal(pick(catalogo));
+    return true;
+  }
+
+  async function surpresaTMDB() {
+    // sorteia tipo (filme/série) e uma página aleatória do "em alta"
+    const tipo = Math.random() < 0.5 ? "movie" : "tv";
+    const page = 1 + Math.floor(Math.random() * 5);
+    const res = await fetch(tmdbUrl("/trending/" + tipo + "/week", { page: String(page) }));
+    if (!res.ok) throw new Error("falha");
+    const data = await res.json();
+    const lista = (data.results || []).filter((x) => x.overview);
+    if (!lista.length) throw new Error("vazio");
+    const item = pick(lista);
+    const titulo = item.title || item.name || "";
+    const ano = (item.release_date || item.first_air_date || "").slice(0, 4);
+    openModal({
+      titulo: titulo + (ano ? ` (${ano})` : ""),
+      genero: tipo === "movie" ? "filme" : "série",
+      img: item.poster_path ? IMG + item.poster_path : "",
+      sinopse: item.overview || "Sinopse não disponível em português.",
+      tmdbId: item.id, tmdbTipo: tipo
+    });
+  }
+
+  if (surpriseBtn) {
+    surpriseBtn.addEventListener("click", async () => {
+      surpriseBtn.disabled = true;
+      const original = surpriseBtn.textContent;
+      surpriseBtn.textContent = "🎲 pensando aqui…";
+      if (statusEl) statusEl.textContent = "";
+      try {
+        // com chave: metade das vezes tenta o TMDB (catálogo enorme); senão, local
+        if (cfg.API_KEY && Math.random() < 0.7) {
+          try { await surpresaTMDB(); }
+          catch (e) { surpresaLocal(); }
+        } else {
+          surpresaLocal();
+        }
+      } finally {
+        surpriseBtn.disabled = false;
+        surpriseBtn.textContent = original;
+      }
+    });
+  }
 
   // inicia na aba de séries
   renderSeries();

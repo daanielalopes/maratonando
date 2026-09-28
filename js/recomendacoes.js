@@ -79,7 +79,7 @@
         genero: tipo === "movie" ? "filme" : "série",
         img: item.poster_path ? IMG + item.poster_path : "",
         sinopse: item.overview || "Sinopse não disponível em português.",
-        trailer: "https://www.youtube.com/results?search_query=" + encodeURIComponent(titulo + " trailer")
+        tmdbId: item.id, tmdbTipo: tipo
       });
     });
     return el;

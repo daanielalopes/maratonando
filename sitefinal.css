@@ -265,3 +265,22 @@ main { padding: 10px 0 40px; }
 .empty-msg code {
   background: rgba(255,255,255,.08); padding: 2px 7px; border-radius: 6px; color: var(--gold);
 }
+
+
+/* ============================================================
+   Botão "surpreenda-me"
+   ============================================================ */
+.surprise-btn {
+  margin-top: 4px;
+  font-family: var(--sans); font-size: 15px; font-weight: 600;
+  padding: 12px 22px; border-radius: 999px; cursor: pointer;
+  color: var(--text); background: transparent;
+  border: 1px dashed var(--purple);
+  transition: .18s;
+}
+.surprise-btn:hover {
+  background: rgba(160,107,255,.15);
+  border-style: solid; border-color: var(--lime); color: #fff;
+  transform: translateY(-1px);
+}
+.surprise-btn:disabled { opacity: .6; cursor: wait; }
