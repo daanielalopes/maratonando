@@ -1,20 +1,21 @@
 /* ============================================================
-   Recomendações de séries via TMDB
+   Recomendações via TMDB
    ------------------------------------------------------------
-   Fluxo:
    1. usuário digita a última série que assistiu
    2. /search/tv  -> encontra a série e o id
    3. /tv/{id}/recommendations -> séries recomendadas
-   4. exibe os resultados (pôster, nota, sinopse)
+   4. exibe como pôsteres na prateleira "recomendações"
    ============================================================ */
 (function () {
   const cfg = window.TMDB_CONFIG || {};
   const API = "https://api.themoviedb.org/3";
-  const IMG = "https://image.tmdb.org/t/p/w300";
+  const IMG = "https://image.tmdb.org/t/p/w400";
 
   const form = document.getElementById("rec-form");
   const input = document.getElementById("rec-input");
+  const shelf = document.getElementById("recomendador");
   const results = document.getElementById("rec-results");
+  const shelfTitle = document.getElementById("rec-shelf-title");
   const statusEl = document.getElementById("rec-status");
   if (!form) return;
 
@@ -45,24 +46,34 @@
     return data.results || [];
   }
 
-  function cardSerie(s) {
-    const poster = s.poster_path
-      ? `<img src="${IMG}${s.poster_path}" alt="${escapeAttr(s.name)}" loading="lazy" />`
-      : `<div class="rec-noimg">sem imagem</div>`;
-    const nota = s.vote_average ? `⭐ ${Number(s.vote_average).toFixed(1)}` : "sem nota";
+  const esc = (window.CINE && window.CINE.escapeAttr) || ((s) => String(s || ""));
+
+  function posterFromTmdb(s) {
+    const el = document.createElement("button");
+    el.className = "poster";
+    el.type = "button";
+    const img = s.poster_path
+      ? `<img src="${IMG}${s.poster_path}" alt="${esc(s.name)}" loading="lazy" />`
+      : `<img class="broken" alt="${esc(s.name)}" />`;
     const ano = (s.first_air_date || "").slice(0, 4);
-    const sinopse = s.overview
-      ? escapeHtml(s.overview)
-      : "Sinopse não disponível em português.";
-    return `
-      <article class="rec-card">
-        <div class="rec-poster">${poster}</div>
-        <div class="rec-info">
-          <h3>${escapeHtml(s.name)} ${ano ? `<span class="rec-ano">(${ano})</span>` : ""}</h3>
-          <div class="rec-nota">${nota}</div>
-          <p>${sinopse}</p>
-        </div>
-      </article>`;
+    const nota = s.vote_average ? `⭐ ${Number(s.vote_average).toFixed(1)}` : "";
+    el.innerHTML = `
+      ${img}
+      <div class="poster-shine"></div>
+      <div class="poster-info">
+        <span class="poster-title">${esc(s.name)}</span>
+        <span class="poster-tag">${ano ? ano + " · " : ""}${nota}</span>
+      </div>`;
+    el.addEventListener("click", () => {
+      if (window.CINE) window.CINE.openModal({
+        titulo: s.name + (ano ? ` (${ano})` : ""),
+        genero: nota || "série",
+        img: s.poster_path ? IMG + s.poster_path : "",
+        sinopse: s.overview || "Sinopse não disponível em português.",
+        trailer: "https://www.youtube.com/results?search_query=" + encodeURIComponent(s.name + " trailer")
+      });
+    });
+    return el;
   }
 
   form.addEventListener("submit", async (e) => {
@@ -75,33 +86,32 @@
       return;
     }
 
-    results.innerHTML = "";
     setStatus("buscando recomendações…");
 
     try {
       const serie = await buscarSerie(nome);
       if (!serie) {
-        setStatus(`Não encontramos a série "${nome}". Tente escrever o nome em inglês ou de outra forma.`, true);
+        setStatus(`Não encontramos "${nome}". Tente escrever de outra forma ou em inglês.`, true);
+        shelf.hidden = true;
         return;
       }
 
       const recs = await buscarRecomendacoes(serie.id);
       if (!recs.length) {
-        setStatus(`Encontramos "${serie.name}", mas o TMDB não trouxe recomendações. Tente outra série.`, true);
+        setStatus(`Encontramos "${serie.name}", mas não há recomendações. Tente outra série.`, true);
+        shelf.hidden = true;
         return;
       }
 
-      setStatus(`porque você assistiu ${serie.name}, você pode gostar de:`);
-      results.innerHTML = recs.slice(0, 12).map(cardSerie).join("");
+      setStatus("");
+      shelfTitle.textContent = `✨ porque você assistiu ${serie.name}`;
+      results.innerHTML = "";
+      recs.slice(0, 14).forEach((s) => results.appendChild(posterFromTmdb(s)));
+      shelf.hidden = false;
+      shelf.scrollIntoView({ behavior: "smooth", block: "start" });
     } catch (err) {
       setStatus(err.message || "Ocorreu um erro na busca.", true);
+      shelf.hidden = true;
     }
   });
-
-  // utilidades de escape (evita HTML injetado nas sinopses/títulos)
-  function escapeHtml(s) {
-    return String(s || "").replace(/[&<>"']/g, (c) =>
-      ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
-  }
-  function escapeAttr(s) { return escapeHtml(s); }
 })();

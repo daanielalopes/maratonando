@@ -1,97 +1,72 @@
-<html>
-    <head>
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" href="logo.png" />
+  <title>CINE — recomendações de séries</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="sitefinal.css" />
+</head>
+<body>
+  <!-- Topbar -->
+  <header class="topbar">
+    <a class="logo" href="index.html">CINE<span>·</span>SÉRIES</a>
+    <nav class="topnav">
+      <a href="#recomendador">Recomendar</a>
+      <a href="#genero-ação">Ação</a>
+      <a href="#genero-drama">Drama</a>
+      <a href="#genero-comédia">Comédia</a>
+      <a href="#genero-terror">Terror</a>
+    </nav>
+  </header>
 
-     <link rel="icon" href="logo.png">
-     <title>Recomendações de Séries</title>
-     <meta charset="utf-8"/>
-     <link rel="stylesheet" href="sitefinal.css">
-    </head>
-    <body>
-     <header>
-         <div class="container">
-         <h1>Recomendações de Séries</h1>
-         <nav>
-            <ul>
-            <li><a href="paginas/ação/ação.html">Ação</a></li>
-            <li><a href="paginas/comédia/comédia.html">Comédia</a></li>
-            <li><a href="paginas/drama/drama.html">Drama</a></li>
-            <li><a href="paginas/terror/terror.html">Terror</a></li>
-            </ul>
-     </header>
-     <main>
-         <section class="recomendador">
-            <h2>Descubra o que assistir a seguir</h2>
-            <p class="rec-sub">Digite a última série que você assistiu e receba recomendações parecidas.</p>
-            <form id="rec-form" class="rec-form">
-                <input id="rec-input" type="text" placeholder="ex: Loki, Skam, The Good Place..." autocomplete="off" required />
-                <button type="submit">Recomendar</button>
-            </form>
-            <p id="rec-status" class="rec-status"></p>
-            <div id="rec-results" class="rec-results"></div>
-         </section>
+  <!-- Hero -->
+  <section class="hero">
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+      <p class="hero-kicker">🍿 sua próxima maratona começa aqui</p>
+      <h1>O que você vai<br/>assistir hoje?</h1>
+      <p class="hero-lead">Diga a última série que você amou e deixe a gente sugerir o próximo vício.</p>
 
-         <div class="loki" style="margin-top:20px;">
-            <h2>Loki</h2>
-            <div class="flex">
-                <img src="img/ação/loki.jpg">
-                <div class="texto_lateral">
-                    <p>Na trama, Loki é levado para a misteriosa organização AVT (Autoridade da Variação do Tempo) após roubar o Tesseract, durante os eventos de Vingadores: Ultimato, e usá-lo para viajar no tempo alterando a história da humanidade e terminando preso em seu próprio thriller policial.</p>
-                    <p>Loki foi lançada em 9 de junho de 2021 na Disney+ e consistirá em seis episódios. Fará parte da Fase Quatro do UCM. Uma segunda temporada está em desenvolvimento.</p>
-                </div>
-            </div>
-              <a href="paginas/aventura/aventura.html">
-             <p>Saiba mais sobre recomendações de séries de ação.</p>
-            </a>
-         </div>
-         
-         
-         <div class="thegoodplace" style="margin-top:20px;">
-            <h2>The Good Place</h2>
-            <div class="flex">
-                <img src="img/comédia/thegoodplace.jpg">
-                <div class="texto_lateral">
-                    <p>Eleanor Shellstrop está morta. Acontece que, após sua partida, ela foi enviada ao "Good Place - ou "Lugar Bom" -, um lugar de eterna felicidade destinado às pessoas que fizeram o bem durante suas vidas. Lá, todos são bons e encontram as suas almas gêmeas, com quem passarão o resto da eternidade. Mas tudo isso não passa de um acidente: Eleanor não merece estar lá. E agora, será que ela vai conseguir esconder a verdade de Michael, que coordena a vizinhança, ou será eventualmente enviada ao "Bad Place"?</p>
-                    <p>A série possui 4 temporadas e está disponível na Netflix. </p>
-                </div>
-            </div>
-            <a href="paginas/comédia/comédia.html">
-                <p>Saiba mais sobre recomendações de séries de comédia.</p>
-               </a>
-         </div>
-         
-         
-         <div class="skam" style="margin-top:20px;">
-             <h2>Skam</h2>
-             <div class="flex">
-                <img src="img/drama/skam.jpg">
-                <div class="texto_lateral">
-                    <p>SKAM, nas mais simples das sinopses, narra o dia a dia desse grupo de estudantes que vivem em Oslo e frequentam a mesma escola, seus problemas, inseguranças e anseios. A cada temporada a perspectiva muda e conhecemos mais a fundo outro personagem.</p>
-                    <p>É uma série de televisão norueguesa que possui 4 temporadas. O <a href="https://portalskam.com/episodios/noruega/">Portal Skam Brasil</a> disponibiliza todos os episódios legendados, você pode assistir online ou baixar. </p>
-                </div>
-            </div>
-            <a href="paginas/drama/drama.html">
-                <p>Saiba mais sobre recomendações de séries de drama.</p>
-               </a>
+      <form id="rec-form" class="rec-form" autocomplete="off">
+        <input id="rec-input" type="text" placeholder="digite uma série… ex: Loki, Skam, Friends" required />
+        <button type="submit">▸ recomendar</button>
+      </form>
+      <p id="rec-status" class="rec-status"></p>
+    </div>
+    <div class="hero-fade"></div>
+  </section>
 
-         </div>
-         <div class="scream" style="margin-top:20px;">
-             <h2>Scream</h2>
-             <div class="flex">
-                <img src="img/terror/scream.jpg">
-                <div class="texto_lateral">
-                    <p>Depois de um incidente de cyber-bullying resultar em um assassinato brutal, a violência reacende a memória de uma série de assassinatos que ocorreram no passado em Lakewood, que intrigaram alguns e talvez tenham inspirado um novo serial killer. Um grupo de adolescentes, com dois velhos amigos tentando se reconectarem, se tornam amantes, inimigos, suspeitos, alvos e vítimas de um assassino que está à procura de sangue.</p>
-                    <p>Scream possui 3 temporadas e está disponível na Netflix.</p>
-                </div>
-            </div>
-            <a href="paginas/terror/terror.html">
-                <p>Saiba mais sobre recomendações de séries de terror.</p>
-               </a>
-         </div>
-     </main>
-     <footer>
+  <main>
+    <!-- Resultados da recomendação (preenchido via JS) -->
+    <section id="recomendador" class="shelf rec-shelf" hidden>
+      <h2 class="shelf-title" id="rec-shelf-title">recomendações</h2>
+      <div id="rec-results" class="row"></div>
+    </section>
 
-     </footer>
-     <script src="js/config.js"></script>
-     <script src="js/recomendacoes.js"></script>
-    </body>
+    <!-- Prateleiras por gênero (preenchidas via JS) -->
+    <div id="shelves"></div>
+  </main>
+
+  <footer class="site-footer">
+    <p>CINE·SÉRIES · projeto de estudo · dados de séries via <a href="https://www.themoviedb.org/" target="_blank" rel="noopener">TMDB</a></p>
+    <p class="footer-mini">Este produto usa a API do TMDB, mas não é endossado nem certificado pelo TMDB.</p>
+  </footer>
+
+  <!-- Modal de detalhes -->
+  <div id="modal" class="modal hidden">
+    <div class="modal-card">
+      <button class="modal-close" id="modal-close" aria-label="fechar">✕</button>
+      <div id="modal-body"></div>
+    </div>
+  </div>
+
+  <script src="js/config.js"></script>
+  <script src="js/series-data.js"></script>
+  <script src="js/recomendacoes.js"></script>
+  <script src="js/app.js"></script>
+</body>
 </html>
