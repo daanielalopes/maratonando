@@ -227,19 +227,26 @@ main { padding: 10px 0 40px; }
 .rec-search { display: flex; gap: 10px; flex-wrap: wrap; width: 100%; }
 
 .type-toggle {
-  display: inline-flex; background: rgba(255,255,255,.06);
+  display: inline-flex; gap: 4px; background: rgba(255,255,255,.06);
   border: 1px solid var(--line); border-radius: 999px; padding: 4px;
 }
-.type-opt { position: relative; cursor: pointer; }
-.type-opt input { position: absolute; opacity: 0; inset: 0; cursor: pointer; }
+.type-opt { margin: 0; cursor: pointer; line-height: 0; }
+/* esconde o círculo nativo do radio de forma acessível */
+.type-opt input {
+  position: absolute; width: 1px; height: 1px;
+  padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0);
+  clip-path: inset(50%); white-space: nowrap; border: 0;
+}
 .type-opt span {
-  display: block; padding: 9px 18px; border-radius: 999px;
-  font-size: 14px; font-weight: 600; color: var(--muted); transition: .18s;
+  display: inline-block; padding: 9px 18px; border-radius: 999px;
+  font-size: 14px; font-weight: 600; color: var(--muted);
+  line-height: 1; transition: .18s; user-select: none;
 }
 .type-opt input:checked + span {
   background: var(--red); color: #fff;
   box-shadow: 0 4px 14px rgba(255,71,126,.4);
 }
+.type-opt input:focus-visible + span { outline: 2px solid var(--lime); outline-offset: 2px; }
 
 /* ============================================================
    Abas do catálogo (Séries / Filmes)
