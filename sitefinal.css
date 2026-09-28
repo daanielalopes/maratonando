@@ -95,3 +95,101 @@ section{display: flex;
   flex-direction: row;}
 
 
+
+
+/* ============================================================
+   Recomendador por IA / TMDB
+   ============================================================ */
+.recomendador {
+  background-color: #943324;
+  border: 2px #0A100D solid;
+  border-radius: 10px;
+  padding: 20px;
+  margin: 20px;
+  color: #0A100D;
+  text-align: center;
+}
+.recomendador h2 { margin-top: 0; }
+.rec-sub { padding-left: 0; font-size: 16px; }
+
+.rec-form {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  margin: 16px 0 8px;
+}
+.rec-form input {
+  font-family: inherit;
+  font-size: 16px;
+  padding: 10px 14px;
+  border: 2px #0A100D solid;
+  border-radius: 10px;
+  width: min(420px, 80%);
+  background-color: #C2C1A5;
+  color: #0A100D;
+}
+.rec-form input::placeholder { color: #5a5a48; }
+.rec-form button {
+  font-family: inherit;
+  font-size: 16px;
+  padding: 10px 20px;
+  border: 2px #0A100D solid;
+  border-radius: 10px;
+  background-color: #0A100D;
+  color: #C2C1A5;
+  cursor: pointer;
+}
+.rec-form button:hover { background-color: #C2C1A5; color: #0A100D; }
+
+.rec-status {
+  padding-left: 0;
+  font-size: 17px;
+  font-style: italic;
+  min-height: 22px;
+}
+.rec-status.rec-error { color: #ffe3d6; font-style: normal; }
+
+/* Grade de resultados */
+.rec-results {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  gap: 14px;
+  margin-top: 16px;
+  text-align: left;
+}
+.rec-card {
+  background-color: #C2C1A5;
+  border: 2px #0A100D solid;
+  border-radius: 10px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+.rec-poster img,
+.rec-noimg {
+  width: 100%;
+  height: 300px;
+  object-fit: cover;
+  display: block;
+  margin: 0;
+  border: none;
+  border-radius: 0;
+}
+.rec-noimg {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #943324;
+  color: #C2C1A5;
+  font-size: 14px;
+}
+.rec-info { padding: 12px; }
+.rec-info h3 { margin: 0 0 6px; font-size: 18px; }
+.rec-ano { font-weight: normal; font-size: 14px; }
+.rec-nota { font-size: 14px; margin-bottom: 8px; }
+.rec-info p { padding-left: 0; font-size: 14px; line-height: 1.4; margin: 0; }
+
+@media (max-width: 600px) {
+  .rec-poster img, .rec-noimg { height: 240px; }
+}

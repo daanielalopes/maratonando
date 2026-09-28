@@ -19,6 +19,17 @@
             </ul>
      </header>
      <main>
+         <section class="recomendador">
+            <h2>Descubra o que assistir a seguir</h2>
+            <p class="rec-sub">Digite a última série que você assistiu e receba recomendações parecidas.</p>
+            <form id="rec-form" class="rec-form">
+                <input id="rec-input" type="text" placeholder="ex: Loki, Skam, The Good Place..." autocomplete="off" required />
+                <button type="submit">Recomendar</button>
+            </form>
+            <p id="rec-status" class="rec-status"></p>
+            <div id="rec-results" class="rec-results"></div>
+         </section>
+
          <div class="loki" style="margin-top:20px;">
             <h2>Loki</h2>
             <div class="flex">
@@ -80,8 +91,7 @@
      <footer>
 
      </footer>
-     <script>
-         alert(`Olá! Seja bem vindo (a) :)`)
-     </script>
+     <script src="js/config.js"></script>
+     <script src="js/recomendacoes.js"></script>
     </body>
 </html>
