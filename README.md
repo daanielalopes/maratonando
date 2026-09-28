@@ -1,33 +1,33 @@
-# CINE·SÉRIES 🎬🍿
+# maratonando ✦
 
-Site de recomendação de séries com visual de aplicativo de streaming. Você informa a última série que assistiu e recebe sugestões parecidas — além de navegar por prateleiras de séries organizadas por gênero, com pôster, sinopse e trailer.
+Descubra o que assistir a seguir — filmes **e** séries. Você escolhe o tipo, informa um título que curtiu e recebe recomendações parecidas. Dá pra navegar por um catálogo de séries por gênero e por filmes puxados em tempo real do [TMDB](https://www.themoviedb.org/), com pôster, sinopse e trailer.
 
-## ✨ Funcionalidades
+## ✦ Funcionalidades
 
-- 🍿 **Hero** com clima de cinema e busca em destaque
-- 🤖 **Recomendações** baseadas na última série assistida, via API do [TMDB](https://www.themoviedb.org/)
-- 🎞️ **Prateleiras por gênero** (ação, drama, comédia, terror) com pôsteres em carrossel
-- 🔎 **Modal** com sinopse e trailer ao clicar em qualquer série
-- 🌙 Tema escuro cinematográfico, responsivo
+- 🎬📺 **Seletor Filme / Série** na busca de recomendações
+- 🤖 **Recomendações** via API do TMDB (`/search` + `/recommendations`)
+- 🗂️ **Catálogo com abas**: Séries (por gênero) e Filmes (em alta / por gênero, via TMDB)
+- 🔎 **Modal** com sinopse e trailer ao clicar em qualquer título
+- 🌙 Visual escuro com pegada de app de streaming
 
 ## 🗂️ Estrutura
 
 ```
 .
-├── index.html            # página única (hero + prateleiras + modal)
+├── index.html            # página única (hero + busca + catálogo + modal)
 ├── sitefinal.css         # visual estilo streaming
 ├── js/
 │   ├── config.js         # chave da API do TMDB
-│   ├── series-data.js    # catálogo local (séries por gênero)
-│   ├── recomendacoes.js  # busca de recomendações no TMDB
-│   └── app.js            # prateleiras e modal
-├── img/                  # pôsteres das séries, por gênero
+│   ├── series-data.js    # catálogo local de séries (por gênero)
+│   ├── recomendacoes.js  # recomendações no TMDB (filme ou série)
+│   └── app.js            # prateleiras, abas e modal
+├── img/                  # pôsteres locais das séries
 └── logo.png
 ```
 
 ## ▶️ Como rodar
 
-O recomendador precisa de internet (fala com o TMDB). Sirva com um servidor local:
+As recomendações e as prateleiras de filmes precisam de internet (falam com o TMDB). Sirva com um servidor local:
 
 ```bash
 python3 -m http.server 8000
